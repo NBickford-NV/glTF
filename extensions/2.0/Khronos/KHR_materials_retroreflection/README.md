@@ -118,11 +118,17 @@ All intermediate quantities derived from `V`, including the half vector `H` and 
 
 The same `V` to `V_retro` substitution is used when sampling the retroreflective BRDF and evaluating its PDF; see Listing 1 of Portsmouth et al. 2026.
 
-## Excluding Other Lobes
+The `V` to `V_retro` substitution is not used for BTDFs.
+
+## Interaction with other extensions
+
+This extension is applied after any other extensions replace `metal_brdf` or `dielectric_brdf`. For example, this extension applies after KHR_materials_anisotropy, KHR_materials_iridescence, or KHR_materials_specular replace these BRDFs.
+
+### Discussion
 
 *This section is non-normative.*
 
-While it is possible to apply the MRM model transformation to any BSDF, this extension intentionally does not apply retroreflectivity to the additional BSDFs introduced by other extensions. This matches the behavior of retroreflection within OpenPBR and MaterialX's implementations.
+While it is possible to apply the MRM model transformation to any BSDF, this extension intentionally does not apply retroreflectivity to transmissive lobes, such as those in KHR_materials_transmission or KHR_materials_diffuse_transmission, or to new layers introduced by other extensions, such as KHR_materials_clearcoat or KHR_materials_sheen. This matches the behavior of retroreflection within OpenPBR and MaterialX's implementations.
 
 This extension's choice can also be motivated by physical and visual reasons. For transmission, Section 5 of Portsmouth et al. 2026 describes how applying the MRM model transformation to transmissive lobes produces nonintuitive results, especially when the index of refraction $\eta$ is near 1. Although KHR_materials_clearcoat and KHR_materials_sheen add BRDFs and not BTDFs to the glTF material model, clearcoats of retroreflective objects are typically not themselves retroreflective, and applying the MRM model transformation to the sheen BRDF has little effect as its scattering is nearly symmetric in the view and reflected view directions.
 
@@ -143,5 +149,5 @@ This extension should not be listed in the `extensionsRequired` list, as retrore
 *This section is non-normative.*
 
 * [Jamie Portsmouth, Matthias Raab, Laurent Belcour, and Francis Liu, The Minimal Retroreflective Microfacet Model, *Journal of Computer Graphics Techniques (JCGT)*, vol. 15, no. 1, 60-75, 2026](http://jcgt.org/published/0015/01/04/)
-* [Retroreflection in MaterialX](https://github.com/AcademySoftwareFoundation/MaterialX/pull/2783)
-* [Retroreflection in the OpenPBR 1.2 draft](https://github.com/AcademySoftwareFoundation/OpenPBR/blob/475bd90d5211d1a4bfb3227d147c692cbd9bc958/index.html#retroreflectivity)
+* [Retroreflection in MaterialX](https://github.com/AcademySoftwareFoundation/MaterialX/blob/v1.39.5/documents/Specification/MaterialX.PBRSpec.md?plain=1#L203)
+* [Retroreflection in OpenPBR](https://github.com/AcademySoftwareFoundation/OpenPBR/pull/255)
